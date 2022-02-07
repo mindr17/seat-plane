@@ -14,3 +14,7 @@ git checkout ':/lession 1'
 ```
 git checkout ':/lession 2'
 ```
+## Lession 3
+```
+git checkout ':/lession 3'
+```
