@@ -19,27 +19,27 @@ const createFormPerson = (n) => {
     htmlFor: `name${n}`,
     textContent: "ФИО",
   });
-
-  const inputName = createElement('input', {
-    className: 'field__input',
+  
+  const inputName = createElement("input", {
+    className: "field__input",
     id: `name${n}`,
-    name: 'name',
-    type: 'text',
-    placeholder: 'Введите ваше ФИО',
+    name: "name",
+    type: "text",
+    placeholder: "Введите ваше ФИО",
     required: true,
+    value: `ФИО ${n}`, // default value
   });
-
-  // ticket number
+  
   const fieldTicket = createElement("div", {
     className: "field",
   });
-
+  
   const labelTicket = createElement("label", {
     className: "field__label",
     htmlFor: `ticket${n}`,
     textContent: "Номер билета (10 цифр)",
   });
-
+  
   const inputTicket = createElement("input", {
     className: "field__input",
     id: `ticket${n}`,
@@ -49,6 +49,7 @@ const createFormPerson = (n) => {
     required: true,
     minLength: 1, // не будем тратить время на ввод символов
     maxlength: 10,
+    value: `Билет пассажира ${n}`, // default value
   });
 
   fieldName.append(labelName, inputName);

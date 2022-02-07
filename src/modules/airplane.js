@@ -1,3 +1,4 @@
+import delcOfNum from "./delcOfNum.js";
 import createElement from './createElement.js';
 
 const createCockPit = (titleText) => {
@@ -64,11 +65,12 @@ const createBlockSeat = (n, count) => {
     wrapperRow.append(seats);
     fuselage.append(wrapperRow);
   }
-
   return fuselage;
 }
 
-const createAirplane = (title, scheme) => {
+const createAirplane = (title, tourData) => {
+  const scheme = tourData.scheme;
+
   const choisesSeat = createElement('form', {
     className: 'choises-seat',
   });
@@ -96,27 +98,49 @@ const createAirplane = (title, scheme) => {
   })
 
   plane.append(cockpit, ...elements);
-
   choisesSeat.append(plane);
 
   return choisesSeat;
 };
 
-const airplane = (main, data) => {
-  const seatsCount = document.querySelector('.field__input').value;
-  let seatsWord = 'мест';
-  if (seatsCount >= 2 && seatsWord <= 4) {
-    seatsWord = 'места'
-  } else if (seatsCount === 1) {
-    seatsWord = 'место'
-  } else {
-    seatsWord = 'мест'
-  }
+const checkSeat = (form, data) => {
+  form.addEventListener('change', () => {
+    console.log('form changed');
+    const formData = new FormData(form);
+    const checked = [...formData].map(([, value]) => value);
+    
+    if (checked.length === data.length) {
+      [...form].forEach(item => {
+        if (item.checked === false && item.name === 'seat') {
+          item.disabled = true;
+        }
+      })
+    }
+    
+  });
+  console.dir(form); // onchange = null
   
-  const title = `Выберите ${seatsCount} места`;
-  const scheme = ['exit', 11, 'exit', 1, 'exit', 17, 'exit'];
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const formData = new FormData(form);
+    const booking = [...formData].map(([, value]) => value);
 
-  main.append(createAirplane(title, scheme));
+    for (let i = 0; i < data.length; i++) {
+      data[i].seat = booking[i];
+    }
+
+    console.log(data);
+  });
+};
+
+const airplane = (main, data, tourData) => {
+  const title = `Выберите ${delcOfNum(data.length, ['место', 'места', 'мест'])}`;
+
+  const choiseForm = createAirplane(title, tourData);
+
+  checkSeat(choiseForm, data);
+
+  main.append(createAirplane(title, tourData));
 };
 
 export default airplane;
