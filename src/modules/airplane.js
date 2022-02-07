@@ -104,6 +104,7 @@ const createAirplane = (title, tourData) => {
 };
 
 const checkSeat = (form, data) => {
+  console.log(form);
   form.addEventListener('change', () => {
     console.log('form changed');
     const formData = new FormData(form);
@@ -118,7 +119,6 @@ const checkSeat = (form, data) => {
     }
     
   });
-  console.dir(form); // onchange = null
   
   form.addEventListener('submit', (e) => {
     e.preventDefault();
