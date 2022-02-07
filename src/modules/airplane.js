@@ -104,9 +104,7 @@ const createAirplane = (title, tourData) => {
 };
 
 const checkSeat = (form, data) => {
-  console.log(form);
   form.addEventListener('change', () => {
-    console.log('form changed');
     const formData = new FormData(form);
     const checked = [...formData].map(([, value]) => value);
     
@@ -140,7 +138,7 @@ const airplane = (main, data, tourData) => {
 
   checkSeat(choiseForm, data);
 
-  main.append(createAirplane(title, tourData));
+  main.append(choiseForm);
 };
 
 export default airplane;

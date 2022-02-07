@@ -3,10 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "webpack serve --devtool source-map",
-    "build": "webpack --mode=production",
-    "build-2": "webpack --mode=production",
-    "start-2": "webpack serve --name=dev"
+    "start": "webpack serve --open --devtool source-map",
+    "build": "webpack --mode=production"
   },
   "license": "MIT",
   "dependencies": {
