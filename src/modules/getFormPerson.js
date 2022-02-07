@@ -43,11 +43,11 @@ const createFormPerson = (n) => {
   const inputTicket = createElement("input", {
     className: "field__input",
     id: `ticket${n}`,
-    name: "name",
+    name: "ticket",
     type: "text",
     placeholder: "Номер билета",
     required: true,
-    minLength: 10,
+    minLength: 1, // не будем тратить время на ввод символов
     maxlength: 10,
   });
 

@@ -10,3 +10,7 @@ yarn start
 ```
 git checkout ':/lession 1'
 ```
+## Lession 2
+```
+git checkout ':/lession 2'
+```
