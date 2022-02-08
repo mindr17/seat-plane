@@ -6,7 +6,6 @@ const readyPlane = (forms, main, tourData) => {
   forms.forEach((form) => {
     form.addEventListener('submit', (event) => {
       event.preventDefault();
-      // console.log(form.elements)
       for (const element of form.elements) {
         element.disabled = true;
       }
