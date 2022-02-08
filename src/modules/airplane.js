@@ -14,8 +14,10 @@ const createCockPit = (titleText) => {
 
   const button = createElement("button", {
     className: "cockpit-confirm",
+    name: 'send',
     type: "submit",
     textContent: "Подтвердить",
+    disabled: true,
   });
 
   cockpit.append(title, button);
@@ -67,38 +69,37 @@ const createBlockSeat = (n, count, bookingSeat) => {
     wrapperRow.append(seats);
     fuselage.append(wrapperRow);
   }
+
   return fuselage;
 }
 
-const createAirplane = (title, tourData) => {
+const createAirplane = (bookingSeat, title, tourData) => {
   const scheme = tourData.scheme;
-  const bookingSeat = getStorage(tourData.id).map(item => item.seat);
 
-  const choisesSeat = createElement('form', {
-    className: 'choises-seat',
+  const choisesSeat = createElement("form", {
+    className: "choises-seat",
   });
 
-  const plane = createElement('fieldset', {
-    className: 'plane',
-    name: 'plane',
+  const plane = createElement("fieldset", {
+    className: "plane",
+    name: "plane",
   });
 
   const cockpit = createCockPit(title);
-  
+
   let n = 1;
 
   const elements = scheme.map((type) => {
-    if (type === 'exit') {
+    if (type === "exit") {
       return createExit();
     }
 
-    if (typeof type === 'number') {
+    if (typeof type === "number") {
       const blockSeat = createBlockSeat(n, type, bookingSeat);
       n = n + type;
       return blockSeat;
     }
-
-  })
+  });
 
   plane.append(cockpit, ...elements);
   choisesSeat.append(plane);
@@ -106,29 +107,29 @@ const createAirplane = (title, tourData) => {
   return choisesSeat;
 };
 
-const checkSeat = (form, data, id) => {
-  const bookingSeat = getStorage(id).map(item => item.seat);
-  form.addEventListener('change', () => {
+const checkSeat = (bookingSeat, form, data, id) => {
+  form.addEventListener("change", () => {
     const formData = new FormData(form);
     const checked = [...formData].map(([, value]) => value);
-    
+
+    form.send.disabled = checked.length !== data.length;
+
     if (checked.length === data.length) {
-      [...form].forEach(item => {
-        if (item.checked === false && item.name === 'seat') {
+      [...form].forEach((item) => {
+        if (item.checked === false && item.name === "seat") {
           item.disabled = true;
         }
-      })
+      });
     } else {
-      [...form].forEach(item => {
-        if (!bookingSeat.includes(item.value)) {
+      [...form].forEach((item) => {
+        if (!bookingSeat.includes(item.value) && item.name === 'seat') {
           item.disabled = false;
         }
-      })
+      });
     }
-    
   });
-   
-  form.addEventListener('submit', (e) => {
+
+  form.addEventListener("submit", (e) => {
     e.preventDefault();
     const formData = new FormData(form);
     const booking = [...formData].map(([, value]) => value);
@@ -143,19 +144,20 @@ const checkSeat = (form, data, id) => {
 
     document.body.innerHTML = `
       <h1 class="title">Спасибо, хорошего полета</h1>
-      <h2 class="title">${booking.length === 1 ?
-      `Ваше место ${booking}`:
-      `Ваши места ${booking}`}</h2>
-    `
+      <h2 class="title">${
+        booking.length === 1 ? `Ваше место ${booking}` : `Ваши места ${booking}`
+      }</h2>
+    `;
   });
 };
 
-const airplane = (main, data, tourData) => {
+const airplane = async (main, data, tourData) => {
   const title = `Выберите ${delcOfNum(data.length, ['место', 'места', 'мест'])}`;
+  const dataResponse = await getStorage(tourData.id);
+  const bookingSeat = dataResponse.map((item) => item.seat);
+  const choiseForm = createAirplane(bookingSeat, title, tourData);
 
-  const choiseForm = createAirplane(title, tourData);
-
-  checkSeat(choiseForm, data, tourData.id);
+  checkSeat(bookingSeat, choiseForm, data, tourData.id);
 
   main.append(choiseForm);
 };
